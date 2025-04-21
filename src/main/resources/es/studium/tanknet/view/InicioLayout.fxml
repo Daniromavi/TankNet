@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="InicioLayout"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="es.studium.tanknet.controller.MainController">
+
+    <!-- Panel izquierdo tipo menú -->
+    <left>
+        <VBox alignment="CENTER" prefWidth="200.0" spacing="10" style="-fx-background-color: #2C3E50;">
+            <Button text="Escanear red" onAction="#handleEscanearRed" styleClass="btn btn-success" />
+            <Button text="Have I Been Pwned?" styleClass="btn btn-success" />
+            <Button text="Ver informes" onAction="#handleVerInformes" styleClass="btn btn-info" />
+            <Button text="Configuración" onAction="#handleConfiguracion" styleClass="btn btn-outline-secondary" />
+        </VBox>
+    </left>
+
+    <!-- Panel central de bienvenida -->
+    <center>
+        <VBox alignment="CENTER" prefHeight="260.0" prefWidth="430.0" spacing="15">
+            <padding>
+                <Insets bottom="30" left="30" right="30" top="30" />
+            </padding>
+
+            <Label text="Bienvenido a TankNet" styleClass="text-primary h3" />
+            <Label text="Analiza tu red local y detecta posibles riesgos de seguridad."
+                   wrapText="true"
+                   maxWidth="400"
+                   styleClass="text-muted" />
+        </VBox>
+    </center>
+
+</BorderPane>

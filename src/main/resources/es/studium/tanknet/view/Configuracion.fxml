@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="es.studium.tanknet.controller.ConfiguracionController">
+
+    <!-- Capa base: contenido principal centrado -->
+    <VBox alignment="CENTER" spacing="20">
+        <Label fx:id="titleLabel" text="Configuración de TankNet" styleClass="h3 text-primary"/>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label fx:id="darkModeLabel" text="Tema oscuro:"/>
+            <CheckBox fx:id="darkModeCheck"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label fx:id="languageLabel" text="Idioma:"/>
+            <ChoiceBox fx:id="languageSelector">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Español"/>
+                        <String fx:value="Inglés"/>
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+        </HBox>
+
+        <Button fx:id="guardarButton" text="Guardar cambios" onAction="#guardarConfiguracion" styleClass="btn btn-success"/>
+    </VBox>
+
+    <!-- Botón volver en capa flotante arriba derecha -->
+    <AnchorPane pickOnBounds="false">
+        <Button fx:id="volverButton"
+                text="← Volver"
+                onAction="#volverAlInicio"
+                styleClass="btn btn-outline-secondary"
+                AnchorPane.topAnchor="5.0"
+                AnchorPane.rightAnchor="5.0"/>
+    </AnchorPane>
+
+</StackPane>
