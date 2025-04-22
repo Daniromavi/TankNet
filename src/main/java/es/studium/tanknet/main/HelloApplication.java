@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -26,7 +25,7 @@ public class HelloApplication extends Application {
         URL cssUrl = getClass().getResource("/styles/bootstrapfx.css");
         System.out.println("CSS URL: " + cssUrl);
         scene.getStylesheets().add(Objects.requireNonNull(cssUrl).toExternalForm());
-        stage.setTitle("redacted");
+        stage.setTitle("TankNet");
         stage.setScene(scene);
         stage.show();
     }

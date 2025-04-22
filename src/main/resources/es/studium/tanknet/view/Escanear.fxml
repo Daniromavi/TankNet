@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.studium.tanknet.controller.EscanearController">
+
+        <!-- Parte superior con título y botón -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <padding>
+                <Insets bottom="15" left="15" right="15" top="15" />
+            </padding>
+            <Label fx:id="tituloLabel" styleClass="h3" text="Dispositivos en la red" />
+            <Button fx:id="btnEscanear" onAction="#escanearRed" styleClass="btn btn-success" text="Escanear" />
+        </HBox>
+    </top>
+
+    <!-- Tabla de resultados -->
+    <center>
+        <TableView fx:id="tablaDispositivos" prefHeight="400" prefWidth="744.0">
+            <columns>
+                <TableColumn fx:id="colIP" prefWidth="142.99999696016312" text="IP" />
+                <TableColumn fx:id="colMac" prefWidth="136.1999969482422" text="MAC" />
+                <TableColumn fx:id="colNombre" prefWidth="148.20001220703125" text="Nombre" />
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

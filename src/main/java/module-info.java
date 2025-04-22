@@ -15,6 +15,7 @@ module es.studium.tfg {
 
     opens es.studium.tanknet.controller to javafx.fxml;
     exports es.studium.tanknet.main;
+    opens es.studium.tanknet.model to javafx.base;
     exports es.studium.tanknet.model to com.fasterxml.jackson.databind;
     opens es.studium.tanknet.main to javafx.fxml;
 }

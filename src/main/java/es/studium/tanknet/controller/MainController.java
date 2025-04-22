@@ -24,7 +24,12 @@ public class MainController {
     }
 
     public void handleEscanearRed() {
-        // Aquí cambias a otra vista o lanzas la lógica de escaneo
+        try {
+            Node configuracionView = FXMLLoader.load(getClass().getResource("/es/studium/tanknet/view/Escanear.fxml"));
+            InicioLayout.setCenter(configuracionView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleVerInformes() {
