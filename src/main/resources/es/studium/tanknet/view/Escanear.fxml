@@ -6,26 +6,30 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.studium.tanknet.controller.EscanearController">
 
-        <!-- Parte superior con título y botón -->
-    <top>
-        <HBox alignment="CENTER_LEFT" spacing="15">
-            <padding>
-                <Insets bottom="15" left="15" right="15" top="15" />
-            </padding>
-            <Label fx:id="tituloLabel" styleClass="h3" text="Dispositivos en la red" />
-            <Button fx:id="btnEscanear" onAction="#escanearRed" styleClass="btn btn-success" text="Escanear" />
-        </HBox>
-    </top>
+            <!-- Parte superior con título y botón -->
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <padding>
+                    <Insets bottom="15" left="15" right="15" top="15" />
+                </padding>
+                <Label fx:id="tituloLabel" styleClass="h3" text="Dispositivos en la red" />
+                <Button fx:id="btnEscanear" styleClass="btn btn-success" text="Escanear" />
+                <Label fx:id="errWifiLabel" styleClass="h3" text="Conectate a una red" textFill="RED" />
+            </HBox>
+        </top>
 
-    <!-- Tabla de resultados -->
-    <center>
-        <TableView fx:id="tablaDispositivos" prefHeight="400" prefWidth="744.0">
-            <columns>
-                <TableColumn fx:id="colIP" prefWidth="142.99999696016312" text="IP" />
-                <TableColumn fx:id="colMac" prefWidth="136.1999969482422" text="MAC" />
-                <TableColumn fx:id="colNombre" prefWidth="148.20001220703125" text="Nombre" />
-            </columns>
-        </TableView>
-    </center>
+        <!-- Tabla de resultados -->
+        <center>
+            <VBox spacing="0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tablaDispositivos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colIP" prefWidth="150" text="IP" />
+                    <TableColumn fx:id="colMac" prefWidth="150" text="MAC" />
+                    <TableColumn fx:id="colPuertos" prefWidth="150" text="Puertos" />
+                    <TableColumn fx:id="colAcciones" prefWidth="300" text="Acciones" />
+                </columns>
+            </TableView>
+            </VBox>
+        </center>
 
-</BorderPane>
+    </BorderPane>

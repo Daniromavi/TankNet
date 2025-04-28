@@ -6,19 +6,23 @@ import javafx.beans.property.StringProperty;
 public class Dispositivo {
     private final StringProperty ip;
     private final StringProperty mac;
-    private final StringProperty nombre;
+    private final StringProperty puertos;
 
-    public Dispositivo(String ip, String mac, String nombre) {
+    public Dispositivo(String ip, String mac, String puertos) {
         this.ip = new SimpleStringProperty(ip);
         this.mac = new SimpleStringProperty(mac);
-        this.nombre = new SimpleStringProperty(nombre);
+        this.puertos = new SimpleStringProperty(puertos);
     }
 
     public StringProperty ipProperty() { return ip; }
     public StringProperty macProperty() { return mac; }
-    public StringProperty nombreProperty() { return nombre; }
+    public StringProperty puertosProperty() { return puertos; }
 
     public String getIp() { return ip.get(); }
     public String getMac() { return mac.get(); }
-    public String getNombre() { return nombre.get(); }
+    public String getPuertos() { return puertos.get(); }
+
+    public void setPuertos(String puertos) {
+        this.puertos.set(puertos);
+    }
 }

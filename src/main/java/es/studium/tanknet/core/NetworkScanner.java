@@ -34,9 +34,7 @@ public class NetworkScanner {
                         } catch (IOException ignored) {}
 
                         Thread.sleep(100); // Esperar un poco para que ARP se actualice
-
-                        InetAddress inet = InetAddress.getByName(ip);
-                        String nombre = inet.getCanonicalHostName();
+                        String nombre = "Pendiente de escaneo...";
                         String mac = obtenerMacDesdeARP(ip);
 
                         Dispositivo d = new Dispositivo(ip, mac, nombre);
@@ -65,12 +63,11 @@ public class NetworkScanner {
         }
     }
 
-    private static String obtenerSubred() {
+    public static String obtenerSubred() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface ni = interfaces.nextElement();
-
                 // Solo interfaces activas, no loopback ni virtuales
                 if (ni.isUp() && !ni.isLoopback() && !ni.isVirtual()) {
                     for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
