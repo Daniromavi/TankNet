@@ -1,17 +1,25 @@
 package es.studium.tanknet.controller;
 
+import es.studium.tanknet.core.NavigationManager;
 import es.studium.tanknet.core.NmapScanner;
 import es.studium.tanknet.model.Dispositivo;
 import es.studium.tanknet.core.NetworkScanner;
+import es.studium.tanknet.model.Servicio;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 
 public class EscanearController {
@@ -118,10 +126,9 @@ public class EscanearController {
                     new Thread(escaneoTask).start();
                 });
 
-
                 btnInfo.setOnAction(event -> {
                     Dispositivo dispositivo = getTableView().getItems().get(getIndex());
-                    System.out.println("Más info de: " + dispositivo.getIp());
+                    NavigationManager.setViewWithData("/es/studium/tanknet/view/DetallesDispositivo.fxml", dispositivo);
                 });
             }
 
@@ -206,5 +213,23 @@ public class EscanearController {
             puntosThread.interrupt();
         }
     }
+
+    private void mostrarVentanaDetalles(Dispositivo dispositivo, List<Servicio> servicios) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/es/studium/tanknet/view/DetallesDispositivo.fxml"));
+            Parent root = loader.load();
+
+            DetallesDispositivoController controller = loader.getController();
+            controller.inicializarDatos(dispositivo, servicios);
+
+            Stage stage = new Stage();
+            stage.setTitle("Detalles de " + dispositivo.getIp());
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

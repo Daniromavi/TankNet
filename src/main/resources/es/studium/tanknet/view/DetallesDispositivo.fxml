@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="es.studium.tanknet.controller.DetallesDispositivoController">
+
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label fx:id="tituloLabel" text="Detalles del dispositivo" styleClass="h3"/>
+            <Label fx:id="ipLabel" text="IP: "/>
+            <Label fx:id="macLabel" text="MAC: "/>
+        </VBox>
+
+    </top>
+
+    <center>
+        <TableView fx:id="tablaServicios">
+            <columns>
+                <TableColumn fx:id="colPuerto" text="Puerto"/>
+                <TableColumn fx:id="colServicio" text="Servicio"/>
+                <TableColumn fx:id="colVersion" text="Versión"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
