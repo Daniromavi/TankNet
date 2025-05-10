@@ -11,6 +11,7 @@ module es.studium.tfg {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires com.fasterxml.jackson.databind;
+    requires javafx.graphics;
 
 
     opens es.studium.tanknet.controller to javafx.fxml;

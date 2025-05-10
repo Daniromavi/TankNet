@@ -83,7 +83,6 @@ public class EscanearController {
                     Dispositivo dispositivo = getTableView().getItems().get(getIndex());
                     System.out.println("Escaneando puertos de: " + dispositivo.getIp());
 
-                    // Lanzamos animación de "Cargando"
                     Task<Void> animacionTask = new Task<>() {
                         @Override
                         protected Void call() throws Exception {
@@ -95,7 +94,7 @@ public class EscanearController {
                                     dispositivo.setPuertos(estadoActual);
                                     tablaDispositivos.refresh();
                                 });
-                                Thread.sleep(500); // medio segundo entre cambios
+                                Thread.sleep(500);
                                 i++;
                             }
                             return null;
@@ -106,25 +105,27 @@ public class EscanearController {
                     hiloAnimacion.setDaemon(true);
                     hiloAnimacion.start();
 
-                    // Ahora lanzamos el escaneo real
-                    Task<List<String>> escaneoTask = new Task<>() {
+                    Task<Void> escaneoTask = new Task<>() {
                         @Override
-                        protected List<String> call() {
-                            return NmapScanner.escanearPuertos(dispositivo.getIp());
+                        protected Void call() {
+                            List<String> puertos = NmapScanner.escanearPuertos(dispositivo.getIp());
+                            List<Servicio> servicios = NmapScanner.obtenerServicios(dispositivo.getIp());
+
+                            Platform.runLater(() -> {
+                                animacionTask.cancel();
+                                String textoPuertos = String.join(", ", puertos);
+                                dispositivo.setPuertos(textoPuertos.isEmpty() ? "Sin puertos abiertos" : textoPuertos);
+                                tablaDispositivos.refresh();
+                                dispositivo.setServicios(servicios);
+                            });
+
+                            return null;
                         }
                     };
 
-                    escaneoTask.setOnSucceeded(workerStateEvent -> {
-                        animacionTask.cancel(); // paramos animación cuando termina el escaneo
-                        List<String> puertos = escaneoTask.getValue();
-                        String puertosConcatenados = String.join(", ", puertos);
-
-                        dispositivo.setPuertos(puertosConcatenados.isEmpty() ? "Sin puertos abiertos" : puertosConcatenados);
-                        tablaDispositivos.refresh();
-                    });
-
                     new Thread(escaneoTask).start();
                 });
+
 
                 btnInfo.setOnAction(event -> {
                     Dispositivo dispositivo = getTableView().getItems().get(getIndex());
@@ -213,23 +214,5 @@ public class EscanearController {
             puntosThread.interrupt();
         }
     }
-
-    private void mostrarVentanaDetalles(Dispositivo dispositivo, List<Servicio> servicios) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/es/studium/tanknet/view/DetallesDispositivo.fxml"));
-            Parent root = loader.load();
-
-            DetallesDispositivoController controller = loader.getController();
-            controller.inicializarDatos(dispositivo, servicios);
-
-            Stage stage = new Stage();
-            stage.setTitle("Detalles de " + dispositivo.getIp());
-            stage.setScene(new Scene(root, 600, 400));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

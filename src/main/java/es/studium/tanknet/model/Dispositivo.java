@@ -3,6 +3,9 @@ package es.studium.tanknet.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Dispositivo {
     private final StringProperty ip;
     private final StringProperty mac;
@@ -21,8 +24,15 @@ public class Dispositivo {
     public String getIp() { return ip.get(); }
     public String getMac() { return mac.get(); }
     public String getPuertos() { return puertos.get(); }
+    public List<Servicio> getServicios() {return servicios;  }
 
     public void setPuertos(String puertos) {
         this.puertos.set(puertos);
     }
+    public void setServicios(List<Servicio> servicios) {
+        this.servicios = servicios != null ? servicios : new ArrayList<>();
+    }
+
+    private List<Servicio> servicios; //Almacena puerto, nombre y version del servicio
+
 }

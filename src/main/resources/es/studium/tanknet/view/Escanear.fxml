@@ -7,11 +7,11 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.studium.tanknet.controller.EscanearController">
 
             <!-- Parte superior con título y botón -->
-        <top>
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <padding>
-                    <Insets bottom="15" left="15" right="15" top="15" />
-                </padding>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <padding>
+                <Insets bottom="15" left="15" right="15" top="15" />
+            </padding>
                 <Label fx:id="tituloLabel" styleClass="h3" text="Dispositivos en la red" />
                 <Button fx:id="btnEscanear" styleClass="btn btn-success" text="Escanear" />
                 <Label fx:id="errWifiLabel" styleClass="h3" text="Conectate a una red" textFill="RED" />

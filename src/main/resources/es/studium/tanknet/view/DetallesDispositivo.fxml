@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.geometry.Insets?>
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="es.studium.tanknet.controller.DetallesDispositivoController">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.studium.tanknet.controller.DetallesDispositivoController">
 
     <top>
-        <VBox spacing="10">
+        <HBox alignment="CENTER_LEFT" spacing="15">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets bottom="15" left="15" right="15" top="15" />
             </padding>
-
-            <Label fx:id="tituloLabel" text="Detalles del dispositivo" styleClass="h3"/>
-            <Label fx:id="ipLabel" text="IP: "/>
-            <Label fx:id="macLabel" text="MAC: "/>
-        </VBox>
-
+            <Label fx:id="tituloLabel" styleClass="h3" text="Detalles del dispositivo" />
+            <Label fx:id="ipLabel" text="IP: " />
+            <Label fx:id="macLabel" text="MAC: " />
+            <Button fx:id="btnEscanear" styleClass="btn btn-success" text="Escanear Servicios" />
+            <Button fx:id="btnInforme" styleClass="btn btn-success" text="Generar Informe" />
+        </HBox>
     </top>
 
     <center>
-        <TableView fx:id="tablaServicios">
+        <VBox spacing="0" VBox.vgrow="ALWAYS">
+        <TableView fx:id="tablaServicios" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colPuerto" text="Puerto"/>
-                <TableColumn fx:id="colServicio" text="Servicio"/>
-                <TableColumn fx:id="colVersion" text="Versión"/>
+                <TableColumn fx:id="colPuerto" prefWidth="109.0" text="Puerto" />
+                <TableColumn fx:id="colServicio" prefWidth="287.0" text="Servicio" />
+                <TableColumn fx:id="colVersion" prefWidth="404.0" text="Versión" />
             </columns>
         </TableView>
+        </VBox>
     </center>
 </BorderPane>

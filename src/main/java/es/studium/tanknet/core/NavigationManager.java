@@ -4,6 +4,7 @@ import es.studium.tanknet.controller.DetallesDispositivoController;
 import es.studium.tanknet.model.Dispositivo;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
@@ -29,13 +30,13 @@ public class NavigationManager {
     public static void setViewWithData(String fxmlPath, Dispositivo dispositivo) {
         try {
             FXMLLoader loader = new FXMLLoader(NavigationManager.class.getResource(fxmlPath));
-            Node vista = loader.load();
+            Parent root = loader.load();
 
             // Accedemos al controlador y le pasamos el dispositivo
             DetallesDispositivoController controller = loader.getController();
             controller.setDispositivo(dispositivo);
 
-            mainLayout.setCenter(vista);
+            mainLayout.setCenter(root);
         } catch (IOException e) {
             e.printStackTrace();
         }

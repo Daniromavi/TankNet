@@ -34,22 +34,20 @@ public class DetallesDispositivoController {
     @FXML
     private TableColumn<Servicio, String> colVersion;
 
-    public void inicializarDatos(Dispositivo dispositivo, List<Servicio> servicios) {
-        ipLabel.setText("IP: " + dispositivo.getIp());
-        macLabel.setText("MAC: " + dispositivo.getMac());
+    public void initialize() {
 
-        colPuerto.setCellValueFactory(new PropertyValueFactory<>("puerto"));
-        colServicio.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colVersion.setCellValueFactory(new PropertyValueFactory<>("version"));
+    colPuerto.setCellValueFactory(new PropertyValueFactory<>("puerto"));
+    colServicio.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+    colVersion.setCellValueFactory(new PropertyValueFactory<>("version"));
 
-        tablaServicios.getItems().addAll(servicios);
-    }
+}
 
     public void setDispositivo(Dispositivo dispositivo) {
         ipLabel.setText("IP: " + dispositivo.getIp());
         macLabel.setText("MAC: " + dispositivo.getMac());
 
-        // Rellenar tablaServicios si tienes datos detallados de puertos
+        tablaServicios.getItems().setAll(dispositivo.getServicios());
+        System.out.println(dispositivo.getServicios());
+        tablaServicios.refresh();
     }
-
 }
