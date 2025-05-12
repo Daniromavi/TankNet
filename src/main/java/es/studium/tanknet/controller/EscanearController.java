@@ -50,6 +50,7 @@ public class EscanearController {
         errWifiLabel.setVisible(false);
 
         tablaDispositivos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tablaDispositivos.setPlaceholder(new Label("No se han escaneado dispositivos."));
         colIP.setMaxWidth(1f * Integer.MAX_VALUE * 11); // 15% aprox
         colMac.setMaxWidth(1f * Integer.MAX_VALUE * 14);
         colPuertos.setMaxWidth(1f * Integer.MAX_VALUE * 48);

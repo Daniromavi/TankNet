@@ -46,8 +46,15 @@ public class DetallesDispositivoController {
         ipLabel.setText("IP: " + dispositivo.getIp());
         macLabel.setText("MAC: " + dispositivo.getMac());
 
-        tablaServicios.getItems().setAll(dispositivo.getServicios());
-        System.out.println(dispositivo.getServicios());
+        if (dispositivo.getServicios() != null && !dispositivo.getServicios().isEmpty()) {
+            tablaServicios.getItems().setAll(dispositivo.getServicios());
+        } else {
+            tablaServicios.getItems().clear(); // Opcional: limpia la tabla si no hay nada
+            tablaServicios.setPlaceholder(new Label("No se han escaneado servicios."));
+            System.out.println("Este dispositivo no tiene servicios escaneados.");
+        }
+
         tablaServicios.refresh();
     }
+
 }
