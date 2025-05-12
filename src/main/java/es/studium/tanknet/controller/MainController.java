@@ -23,14 +23,19 @@ public class MainController {
         NavigationManager.setView("/es/studium/tanknet/view/InicioCentro.fxml");
     }
 
+    private Node vistaEscanear = null;
+
     public void handleEscanearRed() {
         try {
-            Node configuracionView = FXMLLoader.load(getClass().getResource("/es/studium/tanknet/view/Escanear.fxml"));
-            InicioLayout.setCenter(configuracionView);
+            if (vistaEscanear == null) {
+                vistaEscanear = FXMLLoader.load(getClass().getResource("/es/studium/tanknet/view/Escanear.fxml"));
+            }
+            InicioLayout.setCenter(vistaEscanear);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void handleVerInformes() {
         // Abrir vista con informes guardados
