@@ -9,17 +9,11 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.List;
 
 public class EscanearController {
@@ -51,6 +45,7 @@ public class EscanearController {
 
         tablaDispositivos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tablaDispositivos.setPlaceholder(new Label("No se han escaneado dispositivos."));
+
         colIP.setMaxWidth(1f * Integer.MAX_VALUE * 11); // 15% aprox
         colMac.setMaxWidth(1f * Integer.MAX_VALUE * 14);
         colPuertos.setMaxWidth(1f * Integer.MAX_VALUE * 48);
