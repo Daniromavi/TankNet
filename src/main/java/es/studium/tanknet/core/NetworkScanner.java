@@ -7,61 +7,43 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.Enumeration;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 public class NetworkScanner {
 
     public static void escanearRed(Consumer<Dispositivo> callback) {
-        String subred = obtenerSubred();
-
-        if (subred == null) {
-            System.out.println("No se pudo obtener la subred.");
-            return;
-        }
-
-        ExecutorService executor = Executors.newFixedThreadPool(100);
-
-        for (int i = 1; i <= 254; i++) {
-            String ip = subred + i;
-            executor.submit(() -> {
-                if (pingHost(ip)) {
-                    try {
-                        // Forzar que la MAC aparezca en la tabla ARP
-                        try (Socket socket = new Socket()) {
-                            socket.connect(new InetSocketAddress(ip, 80), 100);
-                        } catch (IOException ignored) {}
-
-                        Thread.sleep(100); // Esperar un poco para que ARP se actualice
-                        String nombre = "Pendiente de escaneo...";
-                        String mac = obtenerMacDesdeARP(ip);
-
-                        Dispositivo d = new Dispositivo(ip, mac, nombre);
-                        System.out.println("Detectado: " + ip + " | MAC: " + mac);
-                        callback.accept(d);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-
-        executor.shutdown();
+    String subred = obtenerSubred();
+    if (subred == null) {
+        System.out.println("No se pudo obtener la subred.");
+        return;
     }
 
-    private static boolean pingHost(String ip) {
-        try {
-            String cmd = System.getProperty("os.name").toLowerCase().contains("win")
-                    ? "ping -n 1 -w 100 " + ip
-                    : "ping -c 1 -W 1 " + ip;
+    try {
+        ProcessBuilder builder = new ProcessBuilder("nmap", "-sn", subred + "0/24");
+        Process process = builder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            Process p = Runtime.getRuntime().exec(cmd);
-            return p.waitFor() == 0;
-        } catch (Exception e) {
-            return false;
+        String linea;
+        String ip = null;
+        String mac = "Desconocida";
+
+        while ((linea = reader.readLine()) != null) {
+            if (linea.contains("Nmap scan report for")) {
+                ip = linea.substring(linea.lastIndexOf(" ") + 1);
+            }
+            else if (linea.contains("Host is up") && ip != null) {
+                String macDetectada = obtenerMacDesdeARP(ip); // Usas tu método confiable
+                Dispositivo d = new Dispositivo(ip, macDetectada, "Pendiente de escaneo...");
+                callback.accept(d);
+                ip = null;
+            }
         }
+
+        process.waitFor();
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
     }
+}
 
     public static String obtenerSubred() {
         try {
