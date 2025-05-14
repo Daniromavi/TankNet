@@ -79,47 +79,47 @@ public class EscanearController {
                     Dispositivo dispositivo = getTableView().getItems().get(getIndex());
                     System.out.println("Escaneando puertos de: " + dispositivo.getIp());
 
-                    Task<Void> animacionTask = new Task<>() {
-                        @Override
-                        protected Void call() throws Exception {
-                            String[] estados = {"Cargando", "Cargando.", "Cargando..", "Cargando..."};
-                            int i = 0;
-                            while (!isCancelled()) {
-                                final String estadoActual = estados[i % estados.length];
-                                Platform.runLater(() -> {
-                                    dispositivo.setPuertos(estadoActual);
-                                    tablaDispositivos.refresh();
-                                });
-                                Thread.sleep(500);
-                                i++;
-                            }
-                            return null;
-                        }
-                    };
-
-                    Thread hiloAnimacion = new Thread(animacionTask);
-                    hiloAnimacion.setDaemon(true);
-                    hiloAnimacion.start();
-
-                    Task<Void> escaneoTask = new Task<>() {
+                    Task<Void> escaneoCompleto = new Task<>() {
                         @Override
                         protected Void call() {
+                            String[] estados = {"Cargando", "Cargando.", "Cargando..", "Cargando..."};
+                            int[] i = {0};
+
+                            Thread animacion = new Thread(() -> {
+                                try {
+                                    while (!isCancelled()) {
+                                        final String estado = estados[i[0] % estados.length];
+                                        Platform.runLater(() -> {
+                                            dispositivo.setPuertos(estado);
+                                            tablaDispositivos.refresh();
+                                        });
+                                        Thread.sleep(500);
+                                        i[0]++;
+                                    }
+                                } catch (InterruptedException ignored) {}
+                            });
+                            animacion.setDaemon(true);
+                            animacion.start();
+
+                            // Realizamos el escaneo real
                             List<String> puertos = NmapScanner.escanearPuertos(dispositivo.getIp());
                             List<Servicio> servicios = NmapScanner.obtenerServicios(dispositivo.getIp());
 
+                            // Detenemos animación y actualizamos UI
                             Platform.runLater(() -> {
-                                animacionTask.cancel();
                                 String textoPuertos = String.join(", ", puertos);
                                 dispositivo.setPuertos(textoPuertos.isEmpty() ? "Sin puertos abiertos" : textoPuertos);
-                                tablaDispositivos.refresh();
                                 dispositivo.setServicios(servicios);
+                                tablaDispositivos.refresh();
                             });
 
+                            // Detener animación
+                            this.cancel(); // hace que el hilo animación termine
                             return null;
                         }
                     };
 
-                    new Thread(escaneoTask).start();
+                    new Thread(escaneoCompleto).start();
                 });
 
 
