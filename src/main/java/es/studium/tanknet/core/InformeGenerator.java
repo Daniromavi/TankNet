@@ -31,19 +31,22 @@ public class InformeGenerator {
         StringBuilder contenido = new StringBuilder();
 
         for (Servicio s : informe.getServicios()) {
-            contenido.append("\\textbf{Servicio:} ").append(s.getNombre()).append(" (")
+            contenido.append("\\textbf{Service:} ").append(s.getNombre()).append(" (")
                     .append(s.getPuerto()).append(" - ").append(s.getVersion()).append(")\\\\\n");
 
             if (s.getVulnerabilidades() != null && !s.getVulnerabilidades().isEmpty()) {
                 for (Vulnerabilidad v : s.getVulnerabilidades()) {
-                    contenido.append("\\texttt{").append(v.getCve()).append("}: ")
-                            .append(v.getDescripcion().replaceAll("[%#&_{}]", "")).append("\\\\[0.2cm]\n");
+                    contenido.append("\\texttt{")
+                            .append(v.getCve()).append("}: ")
+                            .append(v.getDescripcion().replaceAll("[%#&_{}]", ""))
+                            .append("\\\\[0.1cm]\n"); // Espacio pequeño entre CVEs
                 }
             } else {
-                contenido.append("Sin vulnerabilidades conocidas\\\\[0.4cm]\n");
+                contenido.append("No known vulnerabilities\\\\[0.1cm]\n");
             }
 
-            contenido.append("\\vspace{0.5cm}\n");
+            // 👇 Aquí el espacio grande entre servicios (¡con doble barra!)
+            contenido.append("\\\\[0.6cm]\n");
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -75,11 +78,14 @@ public class InformeGenerator {
         \\end{center}
 
         \\vspace{1cm}
-        \\section*{Servicios y Vulnerabilidades}
+       \s
+        \\section*{Services and Vulnerabilities}
 
         %s
 
+        \\textbf{Nota:} Las descripciones de vulnerabilidades se muestran en el idioma original (inglés).
+           \s
         \\end{document}
-        """;
+       \s""";
 
 }
