@@ -12,6 +12,7 @@ module es.studium.tfg {
     requires com.almasb.fxgl.all;
     requires com.fasterxml.jackson.databind;
     requires javafx.graphics;
+    requires org.json;
 
 
     opens es.studium.tanknet.controller to javafx.fxml;

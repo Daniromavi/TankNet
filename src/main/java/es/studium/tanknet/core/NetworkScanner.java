@@ -50,6 +50,8 @@ public class NetworkScanner {
 
             for (String ipActiva : ipsDetectadas) {
                 String mac = arpTable.getOrDefault(ipActiva, "00:00:00:00:00:00");
+                System.out.println("IP detectada: " + ipActiva + " - MAC: " + mac);
+
                 Dispositivo d = new Dispositivo(ipActiva, mac, "Pendiente de escaneo...");
                 callback.accept(d);
             }
@@ -86,9 +88,7 @@ public class NetworkScanner {
     private static Map<String, String> cacheARP() {
         Map<String, String> tabla = new HashMap<>();
         try {
-            ProcessBuilder pb = System.getProperty("os.name").toLowerCase().contains("win")
-                    ? new ProcessBuilder("arp", "-a")
-                    : new ProcessBuilder("arp", "-a");
+            ProcessBuilder pb = new ProcessBuilder("arp", "-a");
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String linea;

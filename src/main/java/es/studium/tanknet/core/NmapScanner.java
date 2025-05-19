@@ -58,7 +58,6 @@ public class NmapScanner {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return servicios;
     }
 

@@ -1,10 +1,12 @@
 package es.studium.tanknet.controller;
 
+import es.studium.tanknet.core.CveLookup;
 import es.studium.tanknet.core.NavigationManager;
 import es.studium.tanknet.core.NmapScanner;
 import es.studium.tanknet.model.Dispositivo;
 import es.studium.tanknet.core.NetworkScanner;
 import es.studium.tanknet.model.Servicio;
+import es.studium.tanknet.model.Vulnerabilidad;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.concurrent.Task;
@@ -104,6 +106,17 @@ public class EscanearController {
                             // Realizamos el escaneo real
                             List<String> puertos = NmapScanner.escanearPuertos(dispositivo.getIp());
                             List<Servicio> servicios = NmapScanner.obtenerServicios(dispositivo.getIp());
+                            for (Servicio servicio : servicios) {
+                                // Limpiar versión para evitar cosas como ((Debian)), etc.
+                                String versionLimpia = servicio.getVersion().replaceAll("[^0-9\\.]", "").trim();
+
+                                System.out.println("Buscando CVEs para: " + servicio.getNombre() + " " + versionLimpia);
+
+                                List<Vulnerabilidad> vulns = CveLookup.buscarCves(servicio.getNombre(), versionLimpia);
+                                System.out.println(vulns);
+                                servicio.setVulnerabilidades(vulns);
+                            }
+
 
                             // Detenemos animación y actualizamos UI
                             Platform.runLater(() -> {
@@ -165,9 +178,8 @@ public class EscanearController {
                     Platform.runLater(() -> tablaDispositivos.getItems().add(dispositivo));
                 });
 
-                // Cuando termine (ponemos una espera para shutdown del executor si quieres)
                 try {
-                    Thread.sleep(5000); // Simula duración de escaneo si es rápido (luego ajustamos)
+                    Thread.sleep(5000); // Simula duración de escaneo si es rápido 
                 } catch (InterruptedException ignored) {}
 
                 Platform.runLater(() -> {
