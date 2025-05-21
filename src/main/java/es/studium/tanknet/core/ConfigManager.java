@@ -7,9 +7,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigManager {
-    private static final String CONFIG_PATH = "config.json";
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final String CONFIG_PATH = "config.json"; // Ruta del archivo de configuración
+    private static final ObjectMapper mapper = new ObjectMapper(); // Jackson para manejar JSON
 
+    // Guarda la configuración (modo oscuro, etc.) en un archivo JSON
     public static void guardarConfiguracion(Configuracion config) {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(CONFIG_PATH), config);
@@ -18,6 +19,7 @@ public class ConfigManager {
         }
     }
 
+    // Carga la configuración desde disco (si existe), o crea una por defecto
     public static Configuracion cargarConfiguracion() {
         File file = new File(CONFIG_PATH);
         if (file.exists()) {
@@ -27,6 +29,6 @@ public class ConfigManager {
                 e.printStackTrace();
             }
         }
-        return new Configuracion(false); // por defecto claro
+        return new Configuracion(false); // Si no hay archivo, se devuelve modo claro por defecto
     }
 }

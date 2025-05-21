@@ -11,22 +11,25 @@ import java.time.format.DateTimeFormatter;
 
 public class InformeGenerator {
 
+    // Genera un informe PDF ejecutando pdflatex a partir del contenido LaTeX generado
     public static void generarPDF(Informe informe, File directorioDestino) throws IOException, InterruptedException {
         String contenidoLaTeX = generarContenidoLaTeX(informe);
         File texFile = new File(directorioDestino, "informe.tex");
 
         Files.writeString(texFile.toPath(), contenidoLaTeX);
 
+        // Ejecutar pdflatex en modo silencioso
         ProcessBuilder pb = new ProcessBuilder("pdflatex", "-interaction=nonstopmode", texFile.getName());
         pb.directory(directorioDestino);
         pb.inheritIO().start().waitFor();
 
-        // Opcional: limpiar archivos auxiliares
+        // Eliminar archivos auxiliares (.aux, .log y .tex)
         Files.deleteIfExists(Path.of(directorioDestino.getAbsolutePath(), "informe.aux"));
         Files.deleteIfExists(Path.of(directorioDestino.getAbsolutePath(), "informe.log"));
         Files.deleteIfExists(texFile.toPath());
     }
 
+    // Genera el contenido LaTeX que se va a compilar a PDF
     private static String generarContenidoLaTeX(Informe informe) {
         StringBuilder contenido = new StringBuilder();
 
@@ -36,19 +39,20 @@ public class InformeGenerator {
 
             if (s.getVulnerabilidades() != null && !s.getVulnerabilidades().isEmpty()) {
                 for (Vulnerabilidad v : s.getVulnerabilidades()) {
+                    // Se escapan símbolos conflictivos para que no reviente el LaTeX
                     contenido.append("\\texttt{")
                             .append(v.getCve()).append("}: ")
                             .append(v.getDescripcion().replaceAll("[%#&_{}]", ""))
-                            .append("\\\\[0.1cm]\n"); // Espacio pequeño entre CVEs
+                            .append("\\\\[0.1cm]\n"); // Espacio pequeño entre vulnerabilidades
                 }
             } else {
                 contenido.append("No known vulnerabilities\\\\[0.1cm]\n");
             }
 
-            // 👇 Aquí el espacio grande entre servicios (¡con doble barra!)
-            contenido.append("\\\\[0.6cm]\n");
+            contenido.append("\\\\[0.6cm]\n"); // Espacio grande entre servicios
         }
 
+        // Formatear fecha para el encabezado
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String fechaFormateada = informe.getFecha().format(formatter);
 
@@ -61,6 +65,7 @@ public class InformeGenerator {
         );
     }
 
+    // Plantilla base de LaTeX que se rellena con título, IP, fecha y contenido
     private static final String PLANTILLA_LATEX = """
         \\documentclass{article}
         \\usepackage[utf8]{inputenc}
@@ -78,14 +83,13 @@ public class InformeGenerator {
         \\end{center}
 
         \\vspace{1cm}
-       \s
+
         \\section*{Services and Vulnerabilities}
 
         %s
 
         \\textbf{Nota:} Las descripciones de vulnerabilidades se muestran en el idioma original (inglés).
-           \s
-        \\end{document}
-       \s""";
 
+        \\end{document}
+        """;
 }

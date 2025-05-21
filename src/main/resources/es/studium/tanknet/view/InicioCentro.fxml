@@ -4,8 +4,6 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="es.studium.tanknet.controller.InicioCentroController"
       alignment="CENTER" spacing="15">
     <Label text="Bienvenido a TankNet" styleClass="text-primary h3" />
     <Label text="Analiza tu red local y detecta posibles riesgos de seguridad."
