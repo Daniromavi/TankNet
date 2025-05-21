@@ -13,8 +13,6 @@
     <left>
         <VBox alignment="CENTER" prefWidth="200.0" spacing="10" style="-fx-background-color: #2C3E50;">
             <Button text="Escanear red" onAction="#handleEscanearRed" styleClass="btn btn-success" />
-            <Button text="Have I Been Pwned?" styleClass="btn btn-success" />
-            <Button text="Ver informes" onAction="#handleVerInformes" styleClass="btn btn-info" />
             <Button text="Configuración" onAction="#handleConfiguracion" styleClass="btn btn-outline-secondary" />
         </VBox>
     </left>
