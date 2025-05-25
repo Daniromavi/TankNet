@@ -104,8 +104,8 @@ public class NetworkScanner {
                         if (addr instanceof Inet4Address) {
                             String ip = addr.getHostAddress();
 
-                            if (!ip.startsWith("192.168.56.") && !ip.startsWith("192.168.52.") &&
-                                    !ip.startsWith("169.254") && !ip.startsWith("127.")) {
+                            if (!ip.startsWith("169.") && !ip.startsWith("192.168.52.") &&
+                                    !ip.startsWith("192.168.80.") && !ip.startsWith("192.168.174.")) {
 
                                 String subred = ip.substring(0, ip.lastIndexOf('.') + 1);
                                 if (subredes.add(subred)) {

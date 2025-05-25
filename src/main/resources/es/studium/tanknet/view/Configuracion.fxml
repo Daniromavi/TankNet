@@ -18,18 +18,6 @@
             <CheckBox fx:id="darkModeCheck"/>
         </HBox>
 
-        <HBox spacing="10" alignment="CENTER">
-            <Label fx:id="languageLabel" text="Idioma:"/>
-            <ChoiceBox fx:id="languageSelector">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Español"/>
-                        <String fx:value="Inglés"/>
-                    </FXCollections>
-                </items>
-            </ChoiceBox>
-        </HBox>
-
         <Button fx:id="guardarButton" text="Guardar cambios" onAction="#guardarConfiguracion" styleClass="btn btn-success"/>
     </VBox>
 
