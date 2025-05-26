@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 public class DetallesDispositivoController {
 
@@ -140,6 +141,21 @@ public class DetallesDispositivoController {
         dialogo.setHeaderText("Introduce un título para el informe:");
         dialogo.setContentText("Título:");
 
+        // Preguntar por el idioma del informe
+        List<String> idiomas = List.of("Español", "Inglés");
+        ChoiceDialog<String> idiomaDialog = new ChoiceDialog<>("Español", idiomas);
+        idiomaDialog.setTitle("Idioma del informe");
+        idiomaDialog.setHeaderText("Selecciona el idioma del informe:");
+        idiomaDialog.setContentText("Idioma:");
+        Optional<String> idiomaSeleccionado = idiomaDialog.showAndWait();
+
+        if (idiomaSeleccionado.isEmpty()) {
+            return; // Cancelado por el usuario
+        }
+
+        String idioma = idiomaSeleccionado.get().equals("Español") ? "es" : "en";
+
+
         String titulo = dialogo.showAndWait().orElse("Informe de " + dispositivo.getIp());
 
         Informe informe = new Informe(titulo, dispositivo.getIp(), dispositivo.getMac(), dispositivo.getServicios());
@@ -159,7 +175,7 @@ public class DetallesDispositivoController {
                 carpetaTemporal.mkdirs();
 
                 // Generar el informe en LaTeX
-                InformeGenerator.generarPDF(informe, carpetaTemporal);
+                InformeGenerator.generarPDF(informe, carpetaTemporal, idioma);
 
                 // Mover el informe final al destino elegido por el usuario
                 File generado = new File(carpetaTemporal, "informe.pdf");

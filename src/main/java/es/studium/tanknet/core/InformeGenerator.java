@@ -11,61 +11,77 @@ import java.time.format.DateTimeFormatter;
 
 public class InformeGenerator {
 
-    // Genera un informe PDF ejecutando pdflatex a partir del contenido LaTeX generado
-    public static void generarPDF(Informe informe, File directorioDestino) throws IOException, InterruptedException {
-        String contenidoLaTeX = generarContenidoLaTeX(informe);
+    public static void generarPDF(Informe informe, File directorioDestino, String idiomaDestino) throws IOException, InterruptedException {
+        String contenidoLaTeX = generarContenidoLaTeX(informe, idiomaDestino);
         File texFile = new File(directorioDestino, "informe.tex");
 
         Files.writeString(texFile.toPath(), contenidoLaTeX);
 
-        // Ejecutar pdflatex en modo silencioso
         ProcessBuilder pb = new ProcessBuilder("pdflatex", "-interaction=nonstopmode", texFile.getName());
         pb.directory(directorioDestino);
         pb.inheritIO().start().waitFor();
 
-        // Eliminar archivos auxiliares (.aux, .log y .tex)
+        // Eliminar archivos temporales
         Files.deleteIfExists(Path.of(directorioDestino.getAbsolutePath(), "informe.aux"));
         Files.deleteIfExists(Path.of(directorioDestino.getAbsolutePath(), "informe.log"));
         Files.deleteIfExists(texFile.toPath());
     }
 
-    // Genera el contenido LaTeX que se va a compilar a PDF
-    private static String generarContenidoLaTeX(Informe informe) {
+    private static String generarContenidoLaTeX(Informe informe, String idioma) {
         StringBuilder contenido = new StringBuilder();
 
-        for (Servicio s : informe.getServicios()) {
-            contenido.append("\\textbf{Service:} ").append(s.getNombre()).append(" (")
-                    .append(s.getPuerto()).append(" - ").append(s.getVersion()).append(")\\\\\n");
+        // Traducción de campos estáticos
+        String titulo = traducir(informe.getTitulo(), idioma);
+        String ipLabel = traducir("IP", idioma);
+        String macLabel = traducir("MAC", idioma);
+        String fechaLabel = traducir("Date", idioma);
+        String seccionTitulo = traducir("Services and Vulnerabilities", idioma);
+        String sinVulnerabilidades = traducir("No known vulnerabilities", idioma);
+        String nota = traducir("Note: The vulnerability descriptions are shown in the selected language.", idioma);
+        String servicioTexto = traducir("Service", idioma);
 
-            if (s.getVulnerabilidades() != null && !s.getVulnerabilidades().isEmpty()) {
-                for (Vulnerabilidad v : s.getVulnerabilidades()) {
-                    // Se escapan símbolos conflictivos para que no reviente el LaTeX
-                    contenido.append("\\texttt{")
-                            .append(v.getCve()).append("}: ")
-                            .append(v.getDescripcion().replaceAll("[%#&_{}]", ""))
-                            .append("\\\\[0.1cm]\n"); // Espacio pequeño entre vulnerabilidades
-                }
-            } else {
-                contenido.append("No known vulnerabilities\\\\[0.1cm]\n");
-            }
-
-            contenido.append("\\\\[0.6cm]\n"); // Espacio grande entre servicios
-        }
-
-        // Formatear fecha para el encabezado
+        // Formatear fecha
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String fechaFormateada = informe.getFecha().format(formatter);
 
+        // Traducir cuerpo del informe
+        for (Servicio s : informe.getServicios()) {
+            String nombre = traducir(s.getNombre(), idioma);
+            String version = s.getVersion();
+            String puerto = s.getPuerto();
+
+            contenido.append(String.format("\\textbf{%s:} %s (%s - %s)\\\\\n", servicioTexto, nombre, puerto, version));
+
+            if (s.getVulnerabilidades() != null && !s.getVulnerabilidades().isEmpty()) {
+                for (Vulnerabilidad v : s.getVulnerabilidades()) {
+                    String descripcion = v.getDescripcion().replaceAll("[%#&_{}]", "");
+                    if (!idioma.equals("en")) {
+                        descripcion = traducir(descripcion, idioma);
+                    }
+                    contenido.append("\\texttt{").append(v.getCve()).append("}: ")
+                            .append(descripcion).append("\\\\[0.1cm]\n");
+                }
+            } else {
+                contenido.append(sinVulnerabilidades).append("\\\\[0.1cm]\n");
+            }
+
+            contenido.append("\\\\[0.6cm]\n");
+        }
+
+        // Ensamblar plantilla LaTeX
         return String.format(PLANTILLA_LATEX,
-                informe.getTitulo(),
-                informe.getIp(),
-                informe.getMac(),
-                fechaFormateada,
-                contenido.toString()
+                titulo, ipLabel, informe.getIp(), macLabel, informe.getMac(), fechaLabel, fechaFormateada,
+                seccionTitulo, contenido.toString(), nota
         );
     }
 
-    // Plantilla base de LaTeX que se rellena con título, IP, fecha y contenido
+    // Traduce con fallback
+    private static String traducir(String texto, String idiomaDestino) {
+        if (idiomaDestino.equals("en")) return texto;
+        return Traductor.traducir(texto, "en", idiomaDestino);
+    }
+
+    // Plantilla LaTeX con variables insertadas
     private static final String PLANTILLA_LATEX = """
         \\documentclass{article}
         \\usepackage[utf8]{inputenc}
@@ -77,18 +93,18 @@ public class InformeGenerator {
 
         \\begin{center}
         \\Huge\\textbf{%s} \\\\[1em]
-        \\normalsize IP: %s \\\\
-        MAC: %s \\\\
-        Fecha: %s
+        \\normalsize %s: %s \\\\
+        %s: %s \\\\
+        %s: %s
         \\end{center}
 
         \\vspace{1cm}
 
-        \\section*{Services and Vulnerabilities}
+        \\section*{%s}
 
         %s
 
-        \\textbf{Nota:} Las descripciones de vulnerabilidades se muestran en el idioma original (inglés).
+        \\textbf{%s}
 
         \\end{document}
         """;
