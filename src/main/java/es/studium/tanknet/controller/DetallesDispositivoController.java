@@ -35,6 +35,15 @@ public class DetallesDispositivoController {
     private Thread animacionThread;
     private boolean animacionActiva = false;
 
+    public void setDispositivo(Dispositivo dispositivo) {
+        this.dispositivoActual = dispositivo;
+
+        ipLabel.setText("IP: " + dispositivo.getIp());
+        macLabel.setText("MAC: " + dispositivo.getMac());
+
+        tablaServicios.refresh();
+    }
+
     public void initialize() {
         // Asociar columnas de la tabla a propiedades del modelo Servicio
         colPuerto.setCellValueFactory(new PropertyValueFactory<>("puerto"));
@@ -43,22 +52,6 @@ public class DetallesDispositivoController {
 
         btnEscanear.setOnAction(event -> escanearServicios());
         btnInforme.setOnAction(event -> generarInforme());
-    }
-
-    public void setDispositivo(Dispositivo dispositivo) {
-        this.dispositivoActual = dispositivo;
-
-        ipLabel.setText("IP: " + dispositivo.getIp());
-        macLabel.setText("MAC: " + dispositivo.getMac());
-
-        if (dispositivo.getServicios() != null && !dispositivo.getServicios().isEmpty()) {
-            tablaServicios.getItems().setAll(dispositivo.getServicios());
-        } else {
-            tablaServicios.getItems().clear();
-            tablaServicios.setPlaceholder(new Label("No se han escaneado servicios."));
-        }
-
-        tablaServicios.refresh();
     }
 
     @FXML
@@ -133,7 +126,13 @@ public class DetallesDispositivoController {
 
     @FXML
     private void generarInforme() {
+
         Dispositivo dispositivo = dispositivoActual;
+
+        if (dispositivoActual == null || dispositivoActual.getServicios() == null || dispositivoActual.getServicios().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "No hay servicios escaneados para generar un informe.").showAndWait();
+            return;
+        }
 
         // Solicitar título del informe al usuario
         TextInputDialog dialogo = new TextInputDialog("Informe de " + dispositivo.getIp());
