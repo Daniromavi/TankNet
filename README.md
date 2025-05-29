@@ -54,7 +54,7 @@ Cada informe incluye:
 - CVEs asociados (extraídos de la API oficial de la NVD)
 - Fecha y hora del escaneo
 
-> ⚠️ Las descripciones de las vulnerabilidades están en inglés (idioma oficial de la NVD).
+> ⚠️ Las descripciones de las vulnerabilidades están en el idioma seleccionado (Traduccion automatica por DeepL).
 
 ---
 ## 📚 Tecnologías utilizadas
